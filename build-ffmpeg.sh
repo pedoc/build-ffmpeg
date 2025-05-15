@@ -11,14 +11,17 @@ set -e
 export TZ=Asia/Shanghai
 BUILD_AT=$(date "+%Y%m%d-%H%M%S")
 
-COLOR_BLUE=`tput setaf 4`
-COLOR_WHITE=`tput setaf 7`
-COLOR_RED=`tput setaf 1`
-COLOR_YELLOW=`tput setaf 3`
+COLOR_BLUE=$(tput setaf 4)
+COLOR_WHITE=$(tput setaf 7)
+COLOR_RED=$(tput setaf 1)
+COLOR_YELLOW=$(tput setaf 3)
 
 ARCH=$(uname -m)
 WORK_DIR="$(pwd)/ffmpeg-build"
-mkdir -p $WORK_DIR
+mkdir -p "$WORK_DIR"
+
+#for github actions
+REPO_PATH="${REPO_PATH:-.}"
 
 info() {
     echo -e "${COLOR_WHITE}[$(date +"%Y-%m-%d %H:%M:%S") INF] $1 $2 $3 $4 $5 ${COLOR_WHITE}"
@@ -267,29 +270,37 @@ install_gcc_7() {
     return 0
 }
 
-# Check GCC version
-GCC_VERSION=$(gcc -dumpfullversion -dumpversion)
-REQUIRED_VERSION="7.3.0"
+REQUIRED_GCC_VERSION="7.3.0"
+CURRENT_GCC_VERSION=$(gcc -dumpfullversion -dumpversion)
+info_line "REPO_PATH: $REPO_PATH"
 
-# 使用sort -V进行版本比较
-if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$GCC_VERSION" | sort -V | head -n1)" = "$REQUIRED_VERSION" ]; then
-    info_line "Found gcc version $GCC_VERSION (>= $REQUIRED_VERSION)"
+if [[ "$ARCH" =~ arm|aarch ]]; then
+    REQUIRED_GCC_VERSION=10.5.0
+    if [ "$(printf '%s\n' "$REQUIRED_GCC_VERSION" "$CURRENT_GCC_VERSION" | sort -V | head -n1)" != "$REQUIRED_GCC_VERSION" ]; then
+        err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on ARM*" >&2
+        info_line "Build GCC from source"
+        bash $REPO_PATH/build-gcc.sh $REQUIRED_GCC_VERSION
+    fi
 else
-    warn_line "gcc version $GCC_VERSION is lower than $REQUIRED_VERSION, attempting to install gcc 7.3"
-    if install_gcc_7; then
-        # Recheck GCC version after installation
-        GCC_VERSION=$(gcc -dumpfullversion -dumpversion)
-        if [ "$(printf '%s\n' "$REQUIRED_VERSION" "$GCC_VERSION" | sort -V | head -n1)" = "$REQUIRED_VERSION" ]; then
-            info_line "Successfully installed and enabled gcc version $GCC_VERSION"
-        else
-            err_line "Failed to install gcc 7.3, current version is $GCC_VERSION"
-            exit 1
-        fi
-    else
-        err_line "Failed to install gcc 7.3"
-        exit 1
+    REQUIRED_GCC_VERSION="8.3.0"
+    if [ "$(printf '%s\n' "$REQUIRED_GCC_VERSION" "$CURRENT_GCC_VERSION" | sort -V | head -n1)" != "$REQUIRED_GCC_VERSION" ]; then
+        err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on X64*" >&2
+        info_line "Build GCC from source"
+        bash $REPO_PATH/build-gcc.sh $REQUIRED_GCC_VERSION
     fi
 fi
+
+info_line "glibc info"
+ldd --version
+
+info_line "gcc info"
+#echo 'int main() { return 0; }' | g++ -x c++ - -march=armv8-a+sve2 -c -o /dev/null
+gcc --version
+gcc -Q --help=target
+g++ --version
+
+info_line "debug info"
+find /usr -name libstdc++.so.6
 
 # Check for yasm or nasm
 if command -v yasm >/dev/null 2>&1; then
@@ -448,7 +459,7 @@ wait_for_input
 cd $WORK_DIR
 #x265
 COMP_PKG_NAME=x265
-COMP_PKG_DL_NAME=x265_3.6
+COMP_PKG_DL_NAME=x265_4.1
 if ! pkg-config --exists $COMP_PKG_NAME; then
     $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
     tar -xf $COMP_PKG_DL_NAME.tar.gz
@@ -732,11 +743,11 @@ patchelf --set-rpath '$ORIGIN' $FFMPEG_OUT_TARGET_DIR/bin/ffmpeg
 patchelf --set-rpath '$ORIGIN' $FFMPEG_OUT_TARGET_DIR/bin/ffplay
 patchelf --set-rpath '$ORIGIN' $FFMPEG_OUT_TARGET_DIR/bin/ffprobe
 
-info_line "deps check"
+info_line "deps check (ffmpeg)"
 lddtree $FFMPEG_OUT_TARGET_DIR/bin/ffmpeg
-info_line "----"
+info_line "deps check (ffplay)"
 lddtree $FFMPEG_OUT_TARGET_DIR/bin/ffplay
-info_line "----"
+info_line "deps check (ffprobe)"
 lddtree $FFMPEG_OUT_TARGET_DIR/bin/ffprobe
 
 cd $WORK_DIR

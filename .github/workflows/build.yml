@@ -10,7 +10,7 @@ jobs:
   build-win:
     if: false
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 300
     strategy:
       matrix:
         include:
@@ -73,6 +73,12 @@ jobs:
         ldd --version
 
     - uses: actions/checkout@v3
+
+    - name: Build GCC
+      run: |
+        apt update
+        chmod +x ./build-gcc.sh
+        ./build-gcc.sh
     
     - name: Build
       run: |
@@ -86,4 +92,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        files: ~/ffmpeg_build/ffmpeg512-${{ matrix.arch_name }}.tar.gz
+        files: $REPO_PATH/ffmpeg_build/ffmpeg512-${{ matrix.arch_name }}.tar.gz
