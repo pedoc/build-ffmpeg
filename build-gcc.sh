@@ -54,7 +54,7 @@ echo "Building"
             --enable-default-pie \
             --enable-languages=c,c++ \
             --target=$ARCH-linux-gnu \
-            ----libdir=/usr/lib/$ARCH-linux-gnu
+            --libdir=/usr/lib/$ARCH-linux-gnu
 make -j$(nproc)
 make install
 
