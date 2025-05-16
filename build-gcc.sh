@@ -26,6 +26,7 @@ echo "PACKAGE_MANAGER: $PACKAGE_MANAGER"
 
 echo "libstdc++.so.6 locations:"
 find /usr -name libstdc++.so.6
+find /usr -name libstdc++.so.6 -exec strings {} \; | grep GLIBC
 
 #11.1.0 - 11.5.0
 GCC_VERSION=${1:-10.5.0}
@@ -52,3 +53,4 @@ echo "gcc $GCC_VERSION build done"
 
 echo "libstdc++.so.6 locations:"
 find /usr -name libstdc++.so.6
+find /usr -name libstdc++.so.6 -exec strings {} \; | grep GLIBC
