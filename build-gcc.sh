@@ -52,9 +52,7 @@ echo "Building"
             --disable-nls \
             --disable-multilib \
             --enable-default-pie \
-            --enable-languages=c,c++ \
-            --target=$ARCH-linux-gnu \
-            --libdir=/usr/lib/$ARCH-linux-gnu
+            --enable-languages=c,c++
 make -j$(nproc)
 make install
 

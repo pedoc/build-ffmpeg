@@ -22,6 +22,8 @@ mkdir -p "$WORK_DIR"
 
 #for github actions
 REPO_PATH="${REPO_PATH:-.}"
+echo "ARCH=$ARCH PATH=$PATH REPO_PATH=$REPO_PATH"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
 info() {
     echo -e "${COLOR_WHITE}[$(date +"%Y-%m-%d %H:%M:%S") INF] $1 $2 $3 $4 $5 ${COLOR_WHITE}"
@@ -280,6 +282,9 @@ if [[ "$ARCH" =~ arm|aarch ]]; then
         err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on ARM*" >&2
         info_line "Build GCC from source"
         bash $REPO_PATH/build-gcc.sh $REQUIRED_GCC_VERSION
+        #If on arm,adjust lib load priority
+        export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
+        info_line "make new GCC library first,LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
     fi
 else
     REQUIRED_GCC_VERSION="8.3.0"
