@@ -52,6 +52,7 @@ err_line () {
 }
 
 PROXY_SERVICE=${1-http://192.168.1.2:10808}
+FFMPEG_REPO_URL=${2:-https://gitee.com/pedoc/ffmpeg.git}
 info_line "PROXY_SERVICE $PROXY_SERVICE"
 
 chk_comp_pkg_config() {
@@ -717,7 +718,7 @@ info_line "end build static deps"
 info_line "start build ffmpeg"
 cd $WORK_DIR
 #ffmpeg5.1.2,此分支具有对flv-h265的支持
-git clone -b n5.1.2 --depth 1 https://gitee.com/pedoc/ffmpeg.git
+git clone -b n5.1.2 --depth 1 $FFMPEG_REPO_URL
 cd ffmpeg
 
 FFMPEG_OUT_TARGET_DIR=/opt/ffmpeg512

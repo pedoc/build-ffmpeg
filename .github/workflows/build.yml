@@ -85,7 +85,7 @@ jobs:
       run: |
         apt update
         chmod +x ./build-ffmpeg.sh
-        ./build-ffmpeg.sh ""
+        ./build-ffmpeg.sh "" "https://github.com/pedoc/ffmpeg.git"
 
     - name: Create Github Release
       id: create_release
