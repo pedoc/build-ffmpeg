@@ -32,6 +32,9 @@ echo "libstdc++.so.6 locations:"
 find /usr -name libstdc++.so.6
 find /usr -name libstdc++.so.6 -exec strings {} \; | grep GLIBC
 
+echo "gcc locations:"
+find /usr -name gcc
+
 #11.1.0 - 11.5.0
 GCC_VERSION=${1:-10.5.0}
 GCC_DIR=gcc-${GCC_VERSION}
@@ -50,6 +53,7 @@ echo "Building"
             --disable-multilib \
             --enable-default-pie \
             --enable-languages=c,c++ \
+            --target=$ARCH-linux-gnu \
             ----libdir=/usr/lib/$ARCH-linux-gnu
 make -j$(nproc)
 make install
@@ -59,3 +63,6 @@ echo "gcc $GCC_VERSION build done"
 echo "libstdc++.so.6 locations:"
 find /usr -name libstdc++.so.6
 find /usr -name libstdc++.so.6 -exec strings {} \; | grep GLIBC
+
+echo "gcc locations:"
+find /usr -name gcc
