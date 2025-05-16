@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+ARCH=$(uname -m)
+echo "ARCH=$ARCH PATH=$PATH"
+echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+
 #export http_proxy=http://192.168.1.2:10808
 #export https_proxy=http://192.168.1.2:10808
 
@@ -45,7 +49,8 @@ echo "Building"
             --disable-nls \
             --disable-multilib \
             --enable-default-pie \
-            --enable-languages=c,c++
+            --enable-languages=c,c++ \
+            ----libdir=/usr/lib/$ARCH-linux-gnu
 make -j$(nproc)
 make install
 
