@@ -166,24 +166,33 @@ build_cmake3_from_source() {
         fi
     fi
 
-    rm -rf /tmp/cmake_install || true
-    mkdir -p /tmp/cmake_install
-    cd /tmp/cmake_install || exit 1
+    # rm -rf /tmp/cmake_install || true
+    # mkdir -p /tmp/cmake_install
+    # cd /tmp/cmake_install || exit 1
 
-    info_line "Downloading CMake ${version}..."
-    wget --no-check-certificate "$url" -O "cmake-${version}.tar.gz" || { warn_line "Download failed!"; exit 1; }
+    # info_line "Downloading CMake ${version}..."
+    # wget --no-check-certificate "$url" -O "cmake-${version}.tar.gz" || { warn_line "Download failed!"; exit 1; }
 
-    tar -xzf "cmake-${version}.tar.gz"
-    cd "cmake-${version}" || exit 1
+    # tar -xzf "cmake-${version}.tar.gz"
+    # cd "cmake-${version}" || exit 1
 
-    info_line "Configuring CMake(disable openssl)..."
-    ./bootstrap --prefix="$install_prefix" -- -DCMAKE_USE_OPENSSL=OFF -DOPENSSL_ROOT_DIR=/usr -DOPENSSL_USE_STATIC_LIBS=TRUE || { warn_line "Bootstrap failed!"; exit 1; }
+    # info_line "Configuring CMake(disable openssl)..."
+    # ./bootstrap --prefix="$install_prefix" -- -DCMAKE_USE_OPENSSL=OFF -DOPENSSL_ROOT_DIR=/usr -DOPENSSL_USE_STATIC_LIBS=TRUE || { warn_line "Bootstrap failed!"; exit 1; }
 
-    info_line "Building CMake..."
-    make -j$(nproc) || { warn_line "Build failed!"; exit 1; }
+    # info_line "Building CMake..."
+    # make -j$(nproc) || { warn_line "Build failed!"; exit 1; }
 
-    info_line "Installing CMake to $install_prefix..."
-    sudo make install || { warn_line "Install failed!"; exit 1; }
+    # info_line "Installing CMake to $install_prefix..."
+    # sudo make install || { warn_line "Install failed!"; exit 1; }
+
+    local file="cmake-$version-linux-${ARCH}.tar.gz"
+    local dir="${file%.tar.gz}"
+    local url="https://github.com/Kitware/CMake/releases/download/v${version}/$file"
+    info_line "Download cmake from $url"
+    $PC4 wget --no-check-certificate -O $file url
+    tar -xzvf $file
+    cd $dir
+    cp -r * /usr/
 
     info_line "CMake installation complete!"
     cmake --version
@@ -283,9 +292,6 @@ if [[ "$ARCH" =~ arm|aarch ]]; then
         err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on ARM*" >&2
         info_line "Build GCC from source"
         bash $REPO_PATH/build-gcc.sh $REQUIRED_GCC_VERSION
-        #Override default libstdc++.so.6
-        mv /usr/lib64/libstdc++.so.6 /usr/lib/aarch64-linux-gnu/libstdc++.so.6
-        info_line "Override libstdc++.so.6"
     fi
 else
     REQUIRED_GCC_VERSION="8.3.0"
