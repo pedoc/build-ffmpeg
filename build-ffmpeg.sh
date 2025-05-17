@@ -768,6 +768,12 @@ tar -czf $ARCHIVE_FILE -C /opt ffmpeg512
 info_line "ffmpeg archive done,src dir:$FFMPEG_OUT_TARGET_DIR, archive dir: $(pwd)"
 ls -lha $ARCHIVE_FILE
 
+#For github runner
+if [[ "$REPO_PATH" != "." ]]; then
+  info_line "copy $ARCHIVE_FILE to $REPO_PATH"
+  cp $ARCHIVE_FILE $REPO_PATH
+fi
+
 #tar -czf ffmpeg512-$(uname -m).tar.gz -C /opt ffmpeg512
 
 # Clean up git proxy settings only if they were set
