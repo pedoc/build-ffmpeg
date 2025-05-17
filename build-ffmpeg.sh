@@ -287,7 +287,7 @@ CURRENT_GCC_VERSION=$(gcc -dumpfullversion -dumpversion)
 info_line "REPO_PATH: $REPO_PATH"
 
 if [[ "$ARCH" =~ arm|aarch ]]; then
-    REQUIRED_GCC_VERSION=10.5.0
+    REQUIRED_GCC_VERSION=8.3.0
     if [ "$(printf '%s\n' "$REQUIRED_GCC_VERSION" "$CURRENT_GCC_VERSION" | sort -V | head -n1)" != "$REQUIRED_GCC_VERSION" ]; then
         err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on ARM*" >&2
         info_line "Build GCC from source"
