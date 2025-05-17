@@ -283,9 +283,9 @@ if [[ "$ARCH" =~ arm|aarch ]]; then
         err "Error: GCC version $CURRENT_GCC_VERSION is less than required $REQUIRED_GCC_VERSION on ARM*" >&2
         info_line "Build GCC from source"
         bash $REPO_PATH/build-gcc.sh $REQUIRED_GCC_VERSION
-        #If on arm,adjust lib load priority
-        export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
-        info_line "make new GCC library first,LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+        #Override default libstdc++.so.6
+        mv /usr/lib64/libstdc++.so.6 /usr/lib/aarch64-linux-gnu/libstdc++.so.6
+        info_line "Override libstdc++.so.6"
     fi
 else
     REQUIRED_GCC_VERSION="8.3.0"

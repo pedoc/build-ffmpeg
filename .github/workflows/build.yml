@@ -93,4 +93,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        files: $REPO_PATH/ffmpeg_build/ffmpeg512-${{ matrix.arch_name }}.tar.gz
+        files: ./ffmpeg_build/ffmpeg512-${{ matrix.arch_name }}.tar.gz
