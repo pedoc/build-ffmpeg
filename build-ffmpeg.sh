@@ -80,7 +80,7 @@ wait_for_input() {
 }
 
 build_nasm_from_source() {
-    wget https://www.nasm.us/pub/nasm/stable/nasm-2.16.03.tar.xz
+    wget --no-check-certificate https://www.nasm.us/pub/nasm/stable/nasm-2.16.03.tar.xz
     tar -xvf nasm-2.16.03.tar.xz
     cd nasm-2.16.03
     ./configure
@@ -88,7 +88,7 @@ build_nasm_from_source() {
 }
 
 build_autoconf_from_source() {
-    wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.xz
+    wget --no-check-certificate https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.xz
     tar -xvf autoconf-2.71.tar.xz
     cd autoconf-2.71
     ./configure
@@ -106,7 +106,7 @@ install_lddtree_from_pkgforge(){
     local url="https://pkgs.pkgforge.dev/dl/bincache/${ARCH}-linux/lddtree/official/lddtree/raw.dl"
     info "Downloading lddtree(static) from $url ..."
     local dl_name="lddtree"
-    $PC4 wget -O $dl_name $url
+    $PC4 wget --no-check-certificate -O $dl_name $url
     chmod +x $dl_name
     mv $dl_name /usr/local/bin/
     info "lddtree install completed"
@@ -130,11 +130,11 @@ install_cmake3_from_pkgforge(){
     local url="https://pkgs.pkgforge.dev/dl/pkgcache/${ARCH}-linux/cmake/appimage/ppkg/stable/cmake/raw.dl"
     info "Downloading CMake(static) from $url ..."
     local dl_name="cmake"
-    $PC4 wget -O $dl_name $url
+    $PC4 wget --no-check-certificate -O $dl_name $url
     chmod +x $dl_name
     mv $dl_name /usr/local/bin/
 
-    $PC4 wget -O fusermount https://pkgs.pkgforge.dev/dl/bincache/${ARCH}-linux/fuse/fusermount/raw.dl
+    $PC4 wget --no-check-certificate -O fusermount https://pkgs.pkgforge.dev/dl/bincache/${ARCH}-linux/fuse/fusermount/raw.dl
     chmod +x fusermount
     mv fusermount /usr/local/bin/
     info "fusermount Version:"
@@ -171,7 +171,7 @@ build_cmake3_from_source() {
     cd /tmp/cmake_install || exit 1
 
     info_line "Downloading CMake ${version}..."
-    wget "$url" -O "cmake-${version}.tar.gz" || { warn_line "Download failed!"; exit 1; }
+    wget --no-check-certificate "$url" -O "cmake-${version}.tar.gz" || { warn_line "Download failed!"; exit 1; }
 
     tar -xzf "cmake-${version}.tar.gz"
     cd "cmake-${version}" || exit 1
@@ -433,7 +433,7 @@ if ! pkg-config --exists $COMP_PKG_NAME; then
     # https://www.openssl.org/source/openssl-1.1.1f.tar.gz
     # https://www.openssl.org/source/openssl-1.1.1k.tar.gz
     # https://www.openssl.org/source/openssl-1.1.1w.tar.gz
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://gitee.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://gitee.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz
     tar -xf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./config no-shared --prefix=/usr
@@ -453,7 +453,7 @@ COMP_PKG_DL_NAME=x264-stable
 if ! pkg-config --exists $COMP_PKG_NAME; then
     info_line "build $COMP_PKG_NAME"
     #git clone --depth=1 https://code.videolan.org/videolan/x264.git
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://code.videolan.org/videolan/x264/-/archive/stable/x264-stable.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://code.videolan.org/videolan/x264/-/archive/stable/x264-stable.tar.gz
     tar -xf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./configure --enable-static --prefix=/usr
@@ -467,7 +467,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=x265
 COMP_PKG_DL_NAME=x265_4.1
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
     tar -xf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME/build/linux
     cmake -DENABLE_SHARED=OFF -DENABLE_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_CLI=OFF -DCMAKE_INSTALL_PREFIX=/usr ../../source
@@ -496,7 +496,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=sdl2
 COMP_PKG_DL_NAME=SDL2-2.28.4
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${COMP_PKG_DL_NAME/SDL2-/}/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://github.com/libsdl-org/SDL/releases/download/release-${COMP_PKG_DL_NAME/SDL2-/}/$COMP_PKG_DL_NAME.tar.gz
     tar -xzvf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     # Configure SDL2 with minimal features to reduce dependencies
@@ -547,7 +547,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=libmp3lame
 COMP_PKG_DL_NAME=lame-3.100
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://zenlayer.dl.sourceforge.net/project/lame/lame/3.100/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://zenlayer.dl.sourceforge.net/project/lame/lame/3.100/$COMP_PKG_DL_NAME.tar.gz
     tar -zxvf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./configure --enable-static --disable-shared --prefix=/usr
@@ -576,7 +576,7 @@ COMP_PKG_NAME=ogg
 COMP_PKG_DL_NAME=libogg-1.3.5
 if ! pkg-config --exists $COMP_PKG_NAME; then
     # don't use https, error: OpenSSL: error:1407742E:SSL routines:SSL23_GET_SERVER_HELLO:tlsv1 alert protocol version on centos7.9
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.xz http://downloads.xiph.org/releases/ogg/$COMP_PKG_DL_NAME.tar.xz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.xz http://downloads.xiph.org/releases/ogg/$COMP_PKG_DL_NAME.tar.xz
     tar -xvf libogg-1.3.5.tar.xz
     cd $COMP_PKG_DL_NAME
     ./configure --disable-shared --enable-static --prefix=/usr
@@ -604,7 +604,7 @@ COMP_PKG_NAME=flac
 COMP_PKG_DL_NAME=flac-1.4.3
 if ! pkg-config --exists $COMP_PKG_NAME; then
     # don't use https, error: OpenSSL: error:1407742E:SSL routines:SSL23_GET_SERVER_HELLO:tlsv1 alert protocol version on centos7.9
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.xz http://downloads.xiph.org/releases/flac/$COMP_PKG_DL_NAME.tar.xz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.xz http://downloads.xiph.org/releases/flac/$COMP_PKG_DL_NAME.tar.xz
     tar -xvf $COMP_PKG_DL_NAME.tar.xz
     cd $COMP_PKG_DL_NAME
     ./configure --disable-shared --enable-static --disable-debug --disable-oggtest --disable-cpplibs --disable-doxygen-docs --with-ogg --prefix=/usr
@@ -618,7 +618,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=vorbis
 COMP_PKG_DL_NAME=libvorbis-1.3.6
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz http://downloads.xiph.org/releases/vorbis/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://downloads.xiph.org/releases/vorbis/$COMP_PKG_DL_NAME.tar.gz
     tar zxvf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./configure --disable-shared --enable-static --prefix=/usr
@@ -658,7 +658,7 @@ wait_for_input
 COMP_PKG_NAME=libpng
 COMP_PKG_DL_NAME=libpng-1.6.37
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://download.sourceforge.net/libpng/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://download.sourceforge.net/libpng/$COMP_PKG_DL_NAME.tar.gz
     tar -zxvf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./configure --disable-shared --enable-static --prefix=/usr
@@ -686,7 +686,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=opus
 COMP_PKG_DL_NAME=opus-1.5.2
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz https://ftp.osuosl.org/pub/xiph/releases/opus/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz https://ftp.osuosl.org/pub/xiph/releases/opus/$COMP_PKG_DL_NAME.tar.gz
     tar -zxvf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     #rm -rf opus_data-*.tar.gz
@@ -704,7 +704,7 @@ cd $WORK_DIR
 COMP_PKG_NAME=libopusenc
 COMP_PKG_DL_NAME=libopusenc-0.2.1
 if ! pkg-config --exists $COMP_PKG_NAME; then
-    $PC4 wget -O $COMP_PKG_DL_NAME.tar.gz  https://ftp.osuosl.org/pub/xiph/releases/opus/$COMP_PKG_DL_NAME.tar.gz
+    $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz  https://ftp.osuosl.org/pub/xiph/releases/opus/$COMP_PKG_DL_NAME.tar.gz
     tar -zvxf $COMP_PKG_DL_NAME.tar.gz
     cd $COMP_PKG_DL_NAME
     ./configure --disable-shared --enable-static --disable-dependency-tracking --disable-maintainer-mode --disable-examples --disable-doc --prefix=/usr
