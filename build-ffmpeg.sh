@@ -144,7 +144,7 @@ install_cmake3_from_pkgforge(){
     cmake --version
 }
 
-build_cmake3_from_source() {
+install_cmake3_if_need() {
     local version="3.28.4"
     local install_prefix="/usr/local"
     local url="https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}.tar.gz"
@@ -189,7 +189,7 @@ build_cmake3_from_source() {
     local dir="${file%.tar.gz}"
     local url="https://github.com/Kitware/CMake/releases/download/v${version}/$file"
     info_line "Download cmake from $url"
-    $PC4 wget --no-check-certificate -O $file url
+    $PC4 wget --no-check-certificate -O $file $url
     tar -xzvf $file
     cd $dir
     cp -r * /usr/
@@ -449,7 +449,7 @@ chk_comp_pkg_config $COMP_PKG_NAME
 wait_for_input
 
 # cmake3 依赖openssl,所以先构建openssl之后再升级cmake3
-build_cmake3_from_source
+install_cmake3_if_need
 #install_cmake3_from_pkgforge
 
 cd $WORK_DIR
