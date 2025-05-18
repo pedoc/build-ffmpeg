@@ -3,6 +3,13 @@
 apt update
 apt install sudo cmake autoconf automake make gcc g++ yasm nasm git libtool libtool-bin libarchive-tools wget python3 pkg-config patchelf -y
 
+echo "dbg info"
+ldd --version
+echo "gcc info"
+gcc --version
+echo "cpu info"
+lscpu
+
 COMP_PKG_NAME=x265
 COMP_PKG_DL_NAME=x265_3.6
 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
