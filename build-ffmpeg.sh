@@ -273,6 +273,9 @@ g++ --version
 info_line "debug info"
 find /usr -name libstdc++.so.6
 
+info_line "cpu info"
+lscpu
+
 # Check for yasm or nasm
 if command -v yasm >/dev/null 2>&1; then
     ASMTOOL="yasm"
