@@ -32,6 +32,7 @@ mkdir -p "$WORK_DIR"
 echo "ARCH=$ARCH PATH=$PATH ENTRYPOINT_DIR=$ENTRYPOINT_DIR"
 echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
+
 info() {
     echo -e "${COLOR_WHITE}[$(date +"%Y-%m-%d %H:%M:%S") INF] $1 $2 $3 $4 $5 ${COLOR_WHITE}"
 }
@@ -61,6 +62,9 @@ err_line () {
 PROXY_SERVICE=${1-http://192.168.1.2:10808}
 FFMPEG_REPO_URL=${2:-https://gitee.com/pedoc/ffmpeg.git}
 info_line "PROXY_SERVICE $PROXY_SERVICE"
+
+info_line "cpu info"
+lscpu
 
 chk_comp_pkg_config() {
     if pkg-config --exists $1; then
@@ -272,9 +276,6 @@ g++ --version
 
 info_line "debug info"
 find /usr -name libstdc++.so.6
-
-info_line "cpu info"
-lscpu
 
 # Check for yasm or nasm
 if command -v yasm >/dev/null 2>&1; then
