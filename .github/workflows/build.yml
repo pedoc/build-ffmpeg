@@ -1,0 +1,96 @@
+name: Build and Release
+ 
+on:
+  push:
+    tags:
+      - 'v*' # 当推送 v 开头的标签时触发
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build-win:
+    if: false
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 300
+    strategy:
+      matrix:
+        include:
+          - os: windows-2019
+            arch: x64
+            ffmpeg_version: 4.5.5
+            arch_name: x64
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Check Environment
+      shell: pwsh
+      run: |
+        Write-Host "Workflow: $env:GITHUB_WORKFLOW"
+        Write-Host "JAVA_HOME_8_X64: $env:JAVA_HOME_8_X64"
+        dir C:\
+        which vcpkg
+        which cmake
+        which git
+        which python
+        which pip
+        which ninja
+        which java
+        which ant
+
+    - name: Build
+      shell: pwsh
+      run: ./build-ffmpeg.ps1
+
+    - name: Create Github Release
+      id: create_release
+      uses: softprops/action-gh-release@v2.2.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: C:/ffmpeg-${{ matrix.ffmpeg_version }}-${{ matrix.arch_name }}.zip
+  build-linux:
+    runs-on: ${{ matrix.os }}
+    env:
+      REPO_PATH: ${{ github.workspace }}
+      TERM: xterm #fix tput bug
+    container:
+      image: debian:10.13
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: x64
+            arch_name: x86_64
+          - os: ubuntu-24.04-arm #ubuntu-latest-arm
+            arch: arm64
+            arch_name: aarch64
+
+    steps:
+    - name: Check Environment
+      run: |
+        uname -a
+        ldd --version
+
+    - uses: actions/checkout@v3
+
+    # - name: Build GCC
+    #   if: matrix.os == 'ubuntu-24.04-arm'
+    #   run: |
+    #     apt update
+    #     chmod +x ./build-gcc.sh
+    #     ./build-gcc.sh
+    
+    - name: Build
+      run: |
+        apt update
+        chmod +x ./build-ffmpeg.sh
+        ./build-ffmpeg.sh "" "https://github.com/pedoc/ffmpeg.git"
+
+    - name: Create Github Release
+      id: create_release
+      uses: softprops/action-gh-release@v2.2.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        files: ffmpeg512-${{ matrix.arch_name }}.tar.gz
