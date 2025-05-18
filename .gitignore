@@ -134,3 +134,5 @@ dmypy.json
 /wss.onefile-build/
 
 /ffmpeg-build
+
+ffmpeg512-*.tar.gz

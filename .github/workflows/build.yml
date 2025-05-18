@@ -80,6 +80,12 @@ jobs:
     #     apt update
     #     chmod +x ./build-gcc.sh
     #     ./build-gcc.sh
+
+    - name: Build x265
+      if: matrix.os == 'ubuntu-24.04-arm'
+      run: |
+        chmod +x ./build-x265.sh
+        ./build-x265.sh
     
     - name: Build
       run: |
