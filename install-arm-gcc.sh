@@ -59,8 +59,8 @@ $CC --version
 $CXX --version
 
 echo "export PATH=\"$INSTALL_DIR/bin:\$PATH\"" >> /etc/profile
-echo "export CC=$INSTALL_DIR/bin/aarch64-none-linux-gnu-gcc" >> /etc/profile
-echo "export CXX=$INSTALL_DIR/bin/aarch64-none-linux-gnu-g++" >> /etc/profile
+echo "export CC=$CC" >> /etc/profile
+echo "export CXX=$CXX" >> /etc/profile
 
 source /etc/profile
 cat /etc/profile
