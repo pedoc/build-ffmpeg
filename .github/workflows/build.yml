@@ -54,7 +54,7 @@ jobs:
       REPO_PATH: ${{ github.workspace }}
       TERM: xterm #fix tput bug
     container:
-      image: debian:11
+      image: debian:10
     timeout-minutes: 60
     strategy:
       matrix:
@@ -74,12 +74,18 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    - name: Build GCC
+    # - name: Build GCC
+    #   if: matrix.os == 'ubuntu-24.04-arm'
+    #   run: |
+    #     apt update
+    #     chmod +x ./build-gcc.sh
+    #     ./build-gcc.sh
+    - name: Install Arm GCC
       if: matrix.os == 'ubuntu-24.04-arm'
       run: |
         apt update
-        chmod +x ./build-gcc.sh
-        ./build-gcc.sh
+        chmod +x ./install-arm-gcc.sh
+        ./install-arm-gcc.sh
 
     - name: Build x265
       if: matrix.os == 'ubuntu-24.04-arm'
