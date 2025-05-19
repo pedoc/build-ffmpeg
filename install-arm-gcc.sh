@@ -58,8 +58,12 @@ echo "[+] 工具链已设置为当前默认 GCC："
 $CC --version
 $CXX --version
 
-echo
-echo "[✔] 安装完成。若希望永久使用该工具链，请将以下内容添加到 ~/.bashrc 或 ~/.zshrc："
-echo "export PATH=\"$INSTALL_DIR/bin:\$PATH\""
-echo "export CC=$INSTALL_DIR/bin/aarch64-none-linux-gnu-gcc"
-echo "export CXX=$INSTALL_DIR/bin/aarch64-none-linux-gnu-g++"
+echo "export PATH=\"$INSTALL_DIR/bin:\$PATH\"" >> /etc/profile
+echo "export CC=$INSTALL_DIR/bin/aarch64-none-linux-gnu-gcc" >> /etc/profile
+echo "export CXX=$INSTALL_DIR/bin/aarch64-none-linux-gnu-g++" >> /etc/profile
+
+cat /etc/profile
+
+echo "gcc info"
+gcc --version
+g++ --version
