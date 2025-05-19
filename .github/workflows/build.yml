@@ -54,7 +54,7 @@ jobs:
       REPO_PATH: ${{ github.workspace }}
       TERM: xterm #fix tput bug
     container:
-      image: debian:10
+      image: debian:11
     timeout-minutes: 60
     strategy:
       matrix:
