@@ -74,12 +74,12 @@ jobs:
 
     - uses: actions/checkout@v3
 
-    # - name: Build GCC
-    #   if: matrix.os == 'ubuntu-24.04-arm'
-    #   run: |
-    #     apt update
-    #     chmod +x ./build-gcc.sh
-    #     ./build-gcc.sh 12.1.0
+    - name: Build GCC
+      if: matrix.os == 'ubuntu-24.04-arm'
+      run: |
+        apt update
+        chmod +x ./build-gcc.sh
+        ./build-gcc.sh 12.1.0
 
     - name: Build x265
       if: matrix.os == 'ubuntu-24.04-arm'

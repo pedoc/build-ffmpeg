@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apt update
-apt install sudo cmake autoconf automake make gcc g++ yasm nasm git libtool libtool-bin libarchive-tools wget python3 pkg-config patchelf -y
+apt install sudo cmake autoconf automake make gcc g++ yasm nasm git libtool libtool-bin libarchive-tools wget python3 pkg-config patchelf binutils -y
 
 echo "dbg info"
 ldd --version
