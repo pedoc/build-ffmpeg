@@ -80,12 +80,12 @@ jobs:
     #     apt update
     #     chmod +x ./build-gcc.sh
     #     ./build-gcc.sh
-    - name: Install Arm GCC
-      if: matrix.os == 'ubuntu-24.04-arm'
-      run: |
-        apt update
-        chmod +x ./install-arm-gcc.sh
-        ./install-arm-gcc.sh 11.2-2022.02
+    # - name: Install Arm GCC
+    #   if: matrix.os == 'ubuntu-24.04-arm'
+    #   run: |
+    #     apt update
+    #     chmod +x ./install-arm-gcc.sh
+    #     ./install-arm-gcc.sh 11.2-2022.02
 
     - name: Build x265
       if: matrix.os == 'ubuntu-24.04-arm'
