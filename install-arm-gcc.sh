@@ -2,55 +2,64 @@
 
 set -e
 
-# 设置目标目录
-INSTALL_DIR="$HOME/opt/gcc-arm"
-mkdir -p "$INSTALL_DIR"
+echo "check package manager and install necessary packages"
+if [ -x "$(command -v apt)" ];
+then
+    PACKAGE_MANAGER="apt"
+    apt update
+    apt install curl wget -y
+elif [ -x "$(command -v yum)" ];
+then
+    PACKAGE_MANAGER="yum"
+    yum install -y curl wget
+else
+    echo "unknown package manager"
+    PACKAGE_MANAGER="unknown"
+fi
+if [ "$PACKAGE_MANAGER" = "unknown" ]; then
+    echo "Unsupported package manager. Exiting."
+    exit 1
+fi
+echo "PACKAGE_MANAGER: $PACKAGE_MANAGER"
 
-# 指定下载页和目标架构
-GCC_PAGE="https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads"
-ARCH="aarch64"  # arm64 主机对应的架构
-
-# 获取最新版的 gcc-aarch64 链接
-echo "[*] 正在查找适用于 $ARCH 的 GCC 工具链下载链接..."
-DOWNLOAD_URL=$(curl -sL "$GCC_PAGE" | grep -oP "https://.*?aarch64.*?x86_64.*?tar\.xz" | head -n 1)
-
-if [[ -z "$DOWNLOAD_URL" ]]; then
-  echo "[!] 未找到合适的 GCC 工具链下载链接"
+# ========== 参数设置 ==========
+VERSION="$1"  # 例如: 13.2.Rel1
+if [[ -z "$VERSION" ]]; then
+  echo "用法: $0 <版本号> （例如: $0 13.2.Rel1）"
   exit 1
 fi
 
-echo "[*] 下载地址: $DOWNLOAD_URL"
+# ARM GCC Base URL 和目标文件名
+BASE_URL="https://developer.arm.com/-/media/Files/downloads/gnu/${VERSION}/binrel"
+FILENAME="gcc-arm-${VERSION}-aarch64-arm-none-linux-gnueabihf.tar.xz"
+DOWNLOAD_URL="${BASE_URL}/${FILENAME}"
 
-# 提取文件名
-FILENAME=$(basename "$DOWNLOAD_URL")
+# 安装路径
+INSTALL_BASE="$HOME/opt/gcc-arm"
+INSTALL_DIR="${INSTALL_BASE}/${VERSION}"
 
-# 下载工具链
-echo "[*] 下载中..."
-wget -O "$FILENAME" "$DOWNLOAD_URL"
+# ========== 开始操作 ==========
+mkdir -p "$INSTALL_BASE"
+cd "$INSTALL_BASE"
 
-# 解压到目标目录
-echo "[*] 解压中..."
-tar -xf "$FILENAME" -C "$INSTALL_DIR"
+echo "[*] 下载 ARM GCC 工具链版本 $VERSION ..."
+wget -c "$DOWNLOAD_URL" -O "$FILENAME"
 
-# 获取解压后的目录
-EXTRACTED_DIR=$(tar -tf "$FILENAME" | head -1 | cut -d/ -f1)
-TOOLCHAIN_DIR="$INSTALL_DIR/$EXTRACTED_DIR"
+echo "[*] 解压工具链到 $INSTALL_DIR ..."
+mkdir -p "$INSTALL_DIR"
+tar -xf "$FILENAME" -C "$INSTALL_DIR" --strip-components=1
 
-# 添加到 PATH
-echo "[*] 工具链路径: $TOOLCHAIN_DIR/bin"
-echo "[*] 正在设置当前 shell 使用该工具链..."
+# 添加到当前 shell PATH
+export PATH="$INSTALL_DIR/bin:$PATH"
+export CC="$INSTALL_DIR/bin/arm-none-linux-gnueabihf-gcc"
+export CXX="$INSTALL_DIR/bin/arm-none-linux-gnueabihf-g++"
 
-export PATH="$TOOLCHAIN_DIR/bin:$PATH"
-
-# 设置默认 gcc 为工具链的 gcc
-export CC="$TOOLCHAIN_DIR/bin/aarch64-none-linux-gnu-gcc"
-export CXX="$TOOLCHAIN_DIR/bin/aarch64-none-linux-gnu-g++"
-
-echo "[+] GCC 版本为:"
+echo "[+] 工具链已设置为当前默认 GCC："
 $CC --version
+$CXX --version
 
-echo ""
-echo "[✔] 工具链安装并配置完成！"
-echo "[i] 若要永久使用，请将以下内容加入 ~/.bashrc 或 ~/.zshrc："
-echo "export PATH=\"$TOOLCHAIN_DIR/bin:\$PATH\""
-echo "export CC=$TOOLCHAIN_DIR"
+echo
+echo "[✔] 安装完成。若希望永久使用该工具链，请将以下内容添加到 ~/.bashrc 或 ~/.zshrc："
+echo "export PATH=\"$INSTALL_DIR/bin:\$PATH\""
+echo "export CC=$INSTALL_DIR/bin/aarch64-none-linux-gnu-gcc"
+echo "export CXX=$INSTALL_DIR/bin/aarch64-none-linux-gnu-g++"
