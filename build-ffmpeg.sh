@@ -432,7 +432,7 @@ wait_for_input
 cd $WORK_DIR
 #x265
 COMP_PKG_NAME=x265
-COMP_PKG_DL_NAME=x265_3.6
+COMP_PKG_DL_NAME=x265_3.5
 if ! pkg-config --exists $COMP_PKG_NAME; then
     $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
     tar -xf $COMP_PKG_DL_NAME.tar.gz

@@ -87,11 +87,11 @@ jobs:
     #     chmod +x ./install-arm-gcc.sh
     #     ./install-arm-gcc.sh 11.2-2022.02
 
-    - name: Build x265
-      if: matrix.os == 'ubuntu-24.04-arm'
-      run: |
-        chmod +x ./build-x265.sh
-        ./build-x265.sh
+    # - name: Build x265
+    #   if: matrix.os == 'ubuntu-24.04-arm'
+    #   run: |
+    #     chmod +x ./build-x265.sh
+    #     ./build-x265.sh
     
     - name: Build
       run: |
