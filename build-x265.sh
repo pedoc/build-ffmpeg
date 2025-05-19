@@ -28,5 +28,5 @@ COMP_PKG_DL_NAME=x265_3.6
 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
 tar -xf $COMP_PKG_DL_NAME.tar.gz
 cd $COMP_PKG_DL_NAME/build/linux
-cmake -DENABLE_SHARED=OFF -DENABLE_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_CLI=OFF -DCMAKE_INSTALL_PREFIX=/usr ../../source
+cmake -DCMAKE_C_FLAGS="-march=armv8-a" -DCMAKE_CXX_FLAGS="-march=armv8-a" -DENABLE_SHARED=OFF -DENABLE_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_CLI=OFF -DCMAKE_INSTALL_PREFIX=/usr ../../source
 make -j$(nproc) && make install
