@@ -5,13 +5,21 @@ apt install sudo cmake autoconf automake make gcc g++ yasm nasm git libtool libt
 
 echo "dbg info"
 ldd --version
+
+echo "as info"
+as --version
+
+echo "ld info"
+ld --version
+
 echo "gcc info"
 gcc --version
+
 echo "cpu info"
 lscpu
 
 COMP_PKG_NAME=x265
-COMP_PKG_DL_NAME=x265_3.6
+COMP_PKG_DL_NAME=x265_4.1
 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz http://ftp.videolan.org/pub/videolan/x265/$COMP_PKG_DL_NAME.tar.gz
 tar -xf $COMP_PKG_DL_NAME.tar.gz
 cd $COMP_PKG_DL_NAME/build/linux
