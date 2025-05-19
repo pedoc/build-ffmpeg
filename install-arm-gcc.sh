@@ -7,11 +7,11 @@ if [ -x "$(command -v apt)" ];
 then
     PACKAGE_MANAGER="apt"
     apt update
-    apt install curl wget -y
+    apt install curl wget xz-utils -y
 elif [ -x "$(command -v yum)" ];
 then
     PACKAGE_MANAGER="yum"
-    yum install -y curl wget
+    yum install -y curl wget xz-utils
 else
     echo "unknown package manager"
     PACKAGE_MANAGER="unknown"
