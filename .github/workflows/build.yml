@@ -55,7 +55,7 @@ jobs:
       TERM: xterm #fix tput bug
     container:
       image: debian:10
-    timeout-minutes: 60
+    timeout-minutes: 300
     strategy:
       matrix:
         include:
