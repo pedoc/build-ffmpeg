@@ -402,10 +402,10 @@ if ! pkg-config --exists $COMP_PKG_NAME; then
     # https://www.openssl.org/source/openssl-1.1.1f.tar.gz
     # https://www.openssl.org/source/openssl-1.1.1k.tar.gz
     # https://www.openssl.org/source/openssl-1.1.1w.tar.gz
-    _url="https://gitee.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz"
+    _url="https://github.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz"
     $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz $_url || {
         echo "Download error：$COMP_PKG_DL_NAME.tar.gz ($_url), try github"
-        _url="https://github.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz"
+        _url="https://gitee.com/pedoc/openssl/releases/download/1.1.1w/openssl-1.1.1w.tar.gz"
         $PC4 wget --no-check-certificate -O $COMP_PKG_DL_NAME.tar.gz $_url
     }
     tar -xf $COMP_PKG_DL_NAME.tar.gz
