@@ -179,7 +179,12 @@ elif [ -x "$(command -v yum)" ];
 then
     PACKAGE_MANAGER="yum"
     yum makecache
-    yum install cmake autoconf automake make gcc gcc-c++ pkgconfig yasm nasm git libtool wget python3 libXext-devel patchelf -y
+    if echo "$(grep "^NAME=" /etc/os-release | cut -d= -f2 | tr -d '"')" | grep -qi "Kylin"; then
+        warn_line "WARN: 麒麟系统需要手动安装 patchelf"
+        yum install cmake autoconf automake make gcc gcc-c++ pkgconfig yasm nasm git libtool wget python3 libXext-devel -y
+    else
+        yum install cmake autoconf automake make gcc gcc-c++ pkgconfig yasm nasm git libtool wget python3 libXext-devel patchelf -y
+    fi
 else
     err "unknown package manager"
     PACKAGE_MANAGER="unknown"
